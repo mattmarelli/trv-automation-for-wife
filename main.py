@@ -106,8 +106,7 @@ class MainWindow(QMainWindow):
         layout.addLayout(trv_file_edit_row)
         layout.addLayout(brk_file_edit_row)
         layout.addWidget(self.run_button)
-        # layout.addWidget(QLabel("Output:"))
-        # layout.addWidget(self.output, 1)
+
 
         self.setCentralWidget(root)
 
@@ -173,8 +172,6 @@ class MainWindow(QMainWindow):
                 trv_rows.append(columns)
                 row_count += 1
 
-        print(f"TRV_ROWS: {trv_rows}")
-
         brk_rows = []
         row_count = 0
         with open(brk_file, "r") as f:
@@ -191,8 +188,6 @@ class MainWindow(QMainWindow):
                 columns = line.split()
                 brk_rows.append(columns)
 
-        print(f"BRK ROWS: {brk_rows}")
-
         trv_df = pd.DataFrame(trv_rows[1:], columns=[
             "Run #",
             "Fault_Type",
@@ -208,8 +203,6 @@ class MainWindow(QMainWindow):
         ])
         trv_df = trv_df.astype(float)
 
-        print(f"TRV DF: {trv_df}")
-
         brk_df = pd.DataFrame(brk_rows[1:], columns=[
             "Run #",
             "BRK1_Int_Rt ",
@@ -221,8 +214,6 @@ class MainWindow(QMainWindow):
             "CB1_Excd_C",
         ])
         brk_df = brk_df.astype(float)
-
-        print(f"BRK DF: {brk_df}")
 
         breaker_input_rating = float(self.breaker_interrupting_rating_edit.text())
         test_duty_bucket_values = {
@@ -245,18 +236,11 @@ class MainWindow(QMainWindow):
         }
 
         brk_local, brk_remote = split_brk_data_by_first_to_clear(brk_df, trv_df)
-        print(f"BRK LOCAL: {brk_local}")
-        print(f"BRK REMOTE: {brk_remote}")
         runs_per_test_duty_bucket_local = create_test_duty_phase_buckets(brk_local, test_duty_bucket_values)
         runs_per_test_duty_bucket_remote = create_test_duty_phase_buckets(brk_remote, test_duty_bucket_values)
-        
-        print(f"RUNS PER TEST DUTY BUCKET LOCAL: {runs_per_test_duty_bucket_local}")
-        print(f"RUNS PER TEST DUTY BUCKET REMOTE: {runs_per_test_duty_bucket_remote}")
-
         local_peaks = find_peaks(runs_per_test_duty_bucket_local, trv_df)
         remote_peaks = find_peaks(runs_per_test_duty_bucket_remote, trv_df)
-        print(f"LOCAL PEAKS: {local_peaks}")
-        print(f"REMOTE PEAKS: {remote_peaks}")
+
         create_output_file(
             local_peaks,
             remote_peaks,
