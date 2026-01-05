@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         self.trv_file_edit.setReadOnly(True)
 
         self.brk_file_edit = QLineEdit()
-        self.brk_file_edit.setPlaceholderText("Select BKR file")
+        self.brk_file_edit.setPlaceholderText("Select BRK file")
         self.brk_file_edit.setReadOnly(True)
 
         browse_1_button = QPushButton("Browse...")
